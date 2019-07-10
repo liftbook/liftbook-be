@@ -2,6 +2,8 @@
 
 //IMPORTS
 const express = require('express')
+//local
+const auth = require('../middleware/auth')
 
 //SETUP
 const router = express.Router()
@@ -10,7 +12,7 @@ const modelUsers = require('../models/users')
 
 //ROUTES
 //create
-router.post('/register', async (req, res) => {
+router.post('/register', auth.register, async (req, res) => {
     try {
         const user = await modelUsers.add_user(req.body)
         user
