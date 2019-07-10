@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
     }
 })
 //RRRRRRrrrr
-router.get('/users', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const users = await modelUsers.get_all_users()
         users.length > 0
@@ -44,9 +44,9 @@ router.get('/users', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/user/:id', async (req, res) => {
+router.get('/:username', async (req, res) => {
     try {
-        const user = await modelUsers.get_user_by({uid: req.params.id})
+        const user = await modelUsers.get_user_by({username: req.params.username})
         user
         ?   res.status(200).json(user)
         :   res.status(404).json({message: `Couldn't find user: ${req.params.id}`})
@@ -55,3 +55,5 @@ router.get('/user/:id', async (req, res) => {
         res.status(500).json(err)
     }
 })
+
+module.exports = router

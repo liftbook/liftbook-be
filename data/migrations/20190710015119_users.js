@@ -1,8 +1,8 @@
 /*
 USER SCHEMA
 -uid (user id) - primary, unqiue, required, set by uuid on create user
--username - unique, required
--password - required, mininum 8 characters
+-username - unique, required, 24 chars or less
+-password - required
 -email - unique, required
 -first name - required
 -last name - required
@@ -15,9 +15,9 @@ exports.up = (knex) =>
             .primary()
             .unique()
             .notNullable()
-        tbl.string('password', 8)
+        tbl.string('password')
             .notNullable()
-        tbl.string('username')
+        tbl.string('username', 24)
             .unique()
             .notNullable()
         tbl.string('first_name')
