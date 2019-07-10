@@ -23,7 +23,7 @@ router.post('/register', auth.register, async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.post('/login', async (req, res) => {
+router.post('/login', auth.authenticate, async (req, res) => {
     try {
         const user = await modelUsers.get_user_by({username: req.body.username})
         user

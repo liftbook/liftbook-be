@@ -9,20 +9,34 @@ const jwtSecret = require('../../config/jwt_secret')
 const check_fields = require('../helpers/check_req_fields')
 
 //logging in
-// authenticate = async (req, res, next) => {
-//     console.log('middleware => authenticate')
-//     const required_fields = ['username', 'password']
+authenticate = async (req, res, next) => {
+    const required_fields = ['username', 'password']
 
-//     //check for required fields
-//     if(check_fields(req.body, ...required_fields))
-//         //remove any extra fields that might exist
-//         req.body = {username: req.body.username, password: req.body.password}
-//     else
-//         //exit with error
-//         return next(`These fields are required: ${required_fields}.`)
+    //check if all required keys are provided
+    if(!check_fields(req.body, ...required_fields))
+        return next(`These fields are required: ${required_fields}.`)
 
-//     //finish this later
-// }
+    //rebuild reqbody, removing any possible extra fields
+    req.body = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    //get user
+    const user = await modelUsers.get_user_by({username: req.body.username})
+
+    //check if user exists
+    if(user == undefined)
+        return next(`Username ${req.body.username} doesn't exist.`)
+
+    //check if password is legit
+    if(crypt.compareSync(req.body.password, user.password))
+        req.authorization = jwtGenToken(user)
+    else
+        return next(`Incorrect password dumbass.`)
+
+    next()
+}
 
 //registering new user
 register = async (req, res, next) => {
@@ -56,4 +70,5 @@ register = async (req, res, next) => {
 //EXPORTS
 module.exports = {
     register,
+    authenticate,
 }
