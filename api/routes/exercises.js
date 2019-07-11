@@ -3,6 +3,7 @@
 //IMPORTS
 const express = require('express')
 //local
+const mwExercise = require('../middleware/exercises')
 
 //SETUP
 const router = express.Router()
@@ -11,7 +12,7 @@ const modelExercises = require('../models/exercises')
 
 //ROUTES
 //create
-router.post('/', async (req, res) => {
+router.post('/', mwExercise.add, async (req, res) => {
     try {
         const exercise = await modelExercises.add_exercise(req.body)
         exercise
@@ -46,10 +47,10 @@ router.get('/:eid', async (req, res) => {
     }
 })
 //update
-router.put('/:eid', async (req, res) => {
+router.put('/:eid', mwExercise.update, async (req, res) => {
     try {
-        await modelExercises.update_exercise(req.params.eid, ...req.body)
-        ?   res.status(200).json({eid: req.params, ...req.body})
+        await modelExercises.update_exercise(req.body.eid, ...req.body)
+        ?   res.status(200).json(req.body)
         :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
     } catch (err) {
         console.log('update exercise by id err:', err)
@@ -57,9 +58,9 @@ router.put('/:eid', async (req, res) => {
     }
 })
 //delete
-router.delete('/:eid', async (req, res) => {
+router.delete('/:eid', mwExercise.remove, async (req, res) => {
     try {
-        await modelExercises.remove_exercise(req.params.eid)
+        await modelExercises.remove_exercise(req.body.eid)
         ?   res.status(200).json({message: `Exercise ${req.params.eid} has been removed.`})
         :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
     } catch (err) {

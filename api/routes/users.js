@@ -3,7 +3,7 @@
 //IMPORTS
 const express = require('express')
 //local
-const auth = require('../middleware/auth')
+const mwAuth = require('../middleware/auth')
 
 //SETUP
 const router = express.Router()
@@ -12,7 +12,7 @@ const modelUsers = require('../models/users')
 
 //ROUTES
 //create
-router.post('/register', auth.register, async (req, res) => {
+router.post('/register', mwAuth.register, async (req, res) => {
     try {
         const user = await modelUsers.add_user(req.body)
         user
@@ -23,7 +23,7 @@ router.post('/register', auth.register, async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.post('/login', auth.authenticate, async (req, res) => {
+router.post('/login', mwAuth.authenticate, async (req, res) => {
     try {
         const user = await modelUsers.get_user_by({username: req.body.username})
         user
