@@ -35,9 +35,9 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:eid', async (req, res) => {
+router.get('/:eid', mwExercise.get, async (req, res) => {
     try {
-        const exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
+        const exercise = await modelExercises.get_exercise_by({eid: req.body.eid})
         exercise
         ?   res.status(200).json(exercise)
         :   res.status(404).json({message: `Couldn't find exercise: ${req.params.id}`})
