@@ -4,9 +4,9 @@ const db = require('../../data/config')
 
 //MODELS
 //create
-const add_exercise = async exerise => {
+const add_exercise = async exercise => {
     await db('exercises').insert(exercise)
-    return get_exercise_by({eid: exerise.eid})
+    return get_exercise_by({eid: exercise.eid})
 }
 
 //read
@@ -17,12 +17,13 @@ const get_exercise_by = async value =>
     await db('exercises').where(value).first()
 
 //update
-const update_exercise = async (value, exercise) =>
-    await db('exercises').where({value}).update(exercise)
+const update_exercise = async (id, exercise) => {
+    return await db('exercises').where({eid: id}).update(exercise)
+}
     
 //delete
 const remove_exercise = async eid =>
-    await db('exercises').where({eid}).del()
+    await db('exercises').where({eid: eid}).delete()
 
 //EXPORT
 module.exports = {

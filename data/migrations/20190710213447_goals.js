@@ -25,6 +25,5 @@ exports.up = knex =>
     tbl.timestamps(true, true);
   });
 
-exports.down = function(knex) {
-  knex.schema.dropTableIfExists("goals");
-};
+exports.down = (knex) =>
+  knex.schema.dropTableIfExists("goals")

@@ -5,6 +5,19 @@ const check_fields = require('../helpers/check_req_fields')
 const modelExercises = require('../models/exercises')
 const modelUsers = require('../models/users')
 
+//getting exercise by eid or name
+get = async (req, res, next) => {
+    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
+    if(!exercise)
+        //--by name
+        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
+    if(!exercise)
+        return next(`Couldn't find exercise ${req.params.id}.`)
+
+    req.body = exercise
+    next()
+}
+
 //adding an exercise
 add = async (req, res, next) => {
     const required_fields = ['name', 'username', 'description']
@@ -18,7 +31,8 @@ add = async (req, res, next) => {
         return next(`Exercise name: ${req.body.name} is currently in use.`)
 
     //check if username exists and get uid if it does
-    const user = modelUsers.get_user_by({username: req.body.username})
+    const user = await modelUsers.get_user_by({username: req.body.username})
+    console.log('user', user)
     if(user)
         req.body.uid = user.uid
     else 
@@ -40,17 +54,17 @@ add = async (req, res, next) => {
 //updating an exercise
 update = async (req, res, next) => {
     //check if exercise exists
-        //--by id
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.id})
+    //--by id
+    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
     if(!exercise)
         //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.id})
+        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
     if(!exercise)
         return next(`Couldn't find exercise ${req.params.id}.`)
     
     //rebuild reqbody
     for(let key in exercise) {
-        req.body.hasOwnProperty(key)
+        if(req.body.hasOwnProperty(key))
             exercise[key] = req.body[key]
     }
     req.body = exercise
@@ -62,12 +76,12 @@ update = async (req, res, next) => {
 remove = async (req, res, next) => {
     //check if exercise exists
         //--by id
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.id})
+    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
     if(!exercise)
         //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.id})
+        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
     if(!exercise)
-        return next(`Couldn't find exercise ${req.params.id}.`)
+        return next(`Couldn't find exercise ${req.params.eid}.`)
     
     //rebuild reqbody
     req.body = exercise
@@ -78,6 +92,7 @@ remove = async (req, res, next) => {
 //EXPORTS
 module.exports = {
     add,
+    get,
     update,
     remove
 }
