@@ -4,7 +4,8 @@ const db = require('../../data/config')
 
 //MODELS
 //create
-const add_exercise = async exerise => {
+const add_exercise = async exercise => {
+    console.log(exercise)
     await db('exercises').insert(exercise)
     return get_exercise_by({eid: exerise.eid})
 }

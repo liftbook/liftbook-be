@@ -18,7 +18,8 @@ add = async (req, res, next) => {
         return next(`Exercise name: ${req.body.name} is currently in use.`)
 
     //check if username exists and get uid if it does
-    const user = modelUsers.get_user_by({username: req.body.username})
+    const user = await modelUsers.get_user_by({username: req.body.username})
+    console.log('user', user)
     if(user)
         req.body.uid = user.uid
     else 

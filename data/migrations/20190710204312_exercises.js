@@ -4,12 +4,15 @@ exports.up = knex =>
       .string("eid")
       .primary()
       .unique()
-      .notNullable();
-    tbl
-      .string("uid")
-      .references("uid")
-      .inTable("users")
-      .notNullable();
+      .notNullable()
+    tbl.string('created_by')
+      .references('uid')
+      .inTable('users')
+      .notNullable()
+    tbl.string('updated_by')
+      .references('uid')
+      .inTable('users')
+      .notNullable()
     tbl
       .string("name")
       .unique()
@@ -17,7 +20,7 @@ exports.up = knex =>
     tbl.string("description").notNullable();
     tbl.string("icon_src");
     tbl.timestamps(true, true);
-  });
-exports.down = function(knex) {
-  knex.schema.dropTableIfExists("exercises");
-};
+  })
+
+exports.down = (knex) =>
+  knex.schema.dropTableIfExists("exercises")

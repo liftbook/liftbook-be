@@ -18,6 +18,5 @@ exports.up = knex =>
     tbl.integer("level");
   });
 
-exports.down = function(knex) {
-  knex.schema.dropTableIfExists("stats");
-};
+exports.down = (knex) =>
+  knex.schema.dropTableIfExists("stats")
