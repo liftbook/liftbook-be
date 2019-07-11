@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
         const users = await modelUsers.get_all_users()
         users.length > 0
         ?   res.status(200).json(users)
-        :   res.status(404).json({message: `Couldn't find any users.`})
+        :   res.status(404).json({message: `No users found.`})
     } catch (err) {
         console.log('get all users err:',err)
         res.status(500).json(err)
@@ -58,4 +58,5 @@ router.get('/:username', async (req, res) => {
     }
 })
 
+//EXPORTS
 module.exports = router
