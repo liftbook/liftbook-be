@@ -3,7 +3,7 @@
 //IMPORTS
 const express = require('express')
 //local
-const auth = require('../middleware/auth')
+const mwAuth = require('../middleware/auth')
 
 //SETUP
 const router = express.Router()
@@ -12,7 +12,7 @@ const modelUsers = require('../models/users')
 
 //ROUTES
 //create
-router.post('/register', auth.register, async (req, res) => {
+router.post('/register', mwAuth.register, async (req, res) => {
     try {
         const user = await modelUsers.add_user(req.body)
         user
@@ -23,7 +23,7 @@ router.post('/register', auth.register, async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.post('/login', auth.authenticate, async (req, res) => {
+router.post('/login', mwAuth.authenticate, async (req, res) => {
     try {
         const user = await modelUsers.get_user_by({username: req.body.username})
         user
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
         const users = await modelUsers.get_all_users()
         users.length > 0
         ?   res.status(200).json(users)
-        :   res.status(404).json({message: `Couldn't find any users.`})
+        :   res.status(404).json({message: `No users found.`})
     } catch (err) {
         console.log('get all users err:',err)
         res.status(500).json(err)
@@ -58,4 +58,5 @@ router.get('/:username', async (req, res) => {
     }
 })
 
+//EXPORTS
 module.exports = router
