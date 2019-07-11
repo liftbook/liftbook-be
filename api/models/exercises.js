@@ -8,6 +8,7 @@ const add_exercise = async exerise => {
     await db('exercises').insert(exercise)
     return get_exercise_by({eid: exerise.eid})
 }
+
 //read
 const get_all_exercises = async () =>
     await db('exercises')
@@ -15,9 +16,19 @@ const get_all_exercises = async () =>
 const get_exercise_by = async value =>
     await db('exercises').where(value).first()
 
+//update
+const update_exercise = async (value, exercise) =>
+    await db('exercises').where({value}).update(exercise)
+    
+//delete
+const remove_exercise = async eid =>
+    await db('exercises').where({eid}).del()
+
 //EXPORT
 module.exports = {
     add_exercise,
     get_all_exercises,
-    get_exercise_by
+    get_exercise_by,
+    update_exercise,
+    remove_exercise
 }

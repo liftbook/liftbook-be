@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
         ?   res.status(201).json(exercise)
         :   res.status(404).json({message: `Exercise couldn't be added.`})
     } catch (err) {
-        console.log('add exercise err:',err)
+        console.log('add exercise err:', err)
         res.status(500).json(err)
     }
 })
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
         ?   res.status(200).json(exercises)
         :   res.status(404).json({message: `No exercises found.`})
     } catch (err) {
-        console.log('get all exercises err:',err)
+        console.log('get all exercises err:', err)
         res.status(500).json(err)
     }
 })
@@ -41,25 +41,29 @@ router.get('/:eid', async (req, res) => {
         ?   res.status(200).json(exercise)
         :   res.status(404).json({message: `Couldn't find exercise: ${req.params.id}`})
     } catch (err) {
-        console.log('get exercise by id err:',err)
+        console.log('get exercise by id err:', err)
         res.status(500).json(err)
     }
 })
 //update
 router.put('/:eid', async (req, res) => {
     try {
-
+        await modelExercises.update_exercise(req.params.eid, ...req.body)
+        ?   res.status(200).json({eid: req.params, ...req.body})
+        :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
     } catch (err) {
-        console.log('update exercise by id err:',err)
+        console.log('update exercise by id err:', err)
         res.status(500).json(err)
     }
 })
 //delete
 router.delete('/:eid', async (req, res) => {
     try {
-
+        await modelExercises.remove_exercise(req.params.eid)
+        ?   res.status(200).json({message: `Exercise ${req.params.eid} has been removed.`})
+        :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
     } catch (err) {
-        console.log('remove exercise err:',err)
+        console.log('remove exercise err:', err)
         res.status(500).json(err)
     }
 })
