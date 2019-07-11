@@ -63,12 +63,12 @@ update = async (req, res, next) => {
 remove = async (req, res, next) => {
     //check if exercise exists
         //--by id
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.id})
+    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
     if(!exercise)
         //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.id})
+        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
     if(!exercise)
-        return next(`Couldn't find exercise ${req.params.id}.`)
+        return next(`Couldn't find exercise ${req.params.eid}.`)
     
     //rebuild reqbody
     req.body = exercise
