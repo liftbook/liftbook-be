@@ -41,17 +41,17 @@ add = async (req, res, next) => {
 //updating an exercise
 update = async (req, res, next) => {
     //check if exercise exists
-        //--by id
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.id})
+    //--by id
+    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
     if(!exercise)
         //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.id})
+        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
     if(!exercise)
         return next(`Couldn't find exercise ${req.params.id}.`)
     
     //rebuild reqbody
     for(let key in exercise) {
-        req.body.hasOwnProperty(key)
+        if(req.body.hasOwnProperty(key))
             exercise[key] = req.body[key]
     }
     req.body = exercise

@@ -49,7 +49,8 @@ router.get('/:eid', async (req, res) => {
 //update
 router.put('/:eid', mwExercise.update, async (req, res) => {
     try {
-        await modelExercises.update_exercise(req.body.eid, ...req.body)
+        const that = await modelExercises.update_exercise(req.body.eid, req.body)
+        that
         ?   res.status(200).json(req.body)
         :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
     } catch (err) {

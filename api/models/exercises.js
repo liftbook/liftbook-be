@@ -18,8 +18,10 @@ const get_exercise_by = async value =>
     await db('exercises').where(value).first()
 
 //update
-const update_exercise = async (value, exercise) =>
-    await db('exercises').where({value}).update(exercise)
+const update_exercise = async (id, exercise) => {
+    console.log('value in model', id)
+    return await db('exercises').where({eid: id}).update(exercise)
+}
     
 //delete
 const remove_exercise = async eid =>
