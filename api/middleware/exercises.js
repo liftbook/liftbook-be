@@ -5,8 +5,18 @@ const check_fields = require('../helpers/check_req_fields')
 const modelExercises = require('../models/exercises')
 const modelUsers = require('../models/users')
 
+get_exercise = async (req, res, next) => {
+    const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
+    if(exercise) {
+        req.body.exercise = exercise
+        next()
+    }
+    else
+        res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
+}
+
 check_exercise = async (req, res, next) => {
-    let exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
+    const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
     if(exercise) {
         req.body.eid = exercise.eid
         next()

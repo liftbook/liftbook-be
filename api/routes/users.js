@@ -26,7 +26,7 @@ router.post('/register', mwAuth.register, async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.post('/login', mwAuth.authenticate, async (req, res) => {
+router.post('/login', mwAuth.authenticate, mwAuth.username_exists, mwAuth.password_matches, async (req, res) => {
     try {
         const user = await modelUsers.get_user_by({username: req.body.username})
         user
