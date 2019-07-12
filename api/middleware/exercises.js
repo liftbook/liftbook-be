@@ -2,18 +2,11 @@
 const uuid = require('uuid')
 //local
 const check_fields = require('../helpers/check_req_fields')
+
 const modelExercises = require('../models/exercises')
 const modelUsers = require('../models/users')
-
-get_exercise = async (req, res, next) => {
-    const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
-    if(exercise) {
-        req.body.exercise = exercise
-        next()
-    }
-    else
-        res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
-}
+const updater = require('../helpers/update_body')
+const get = require('../helpers/get')
 
 check_exercise = async (req, res, next) => {
     const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
@@ -23,19 +16,6 @@ check_exercise = async (req, res, next) => {
     }
     else
         res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
-}
-
-//getting exercise by eid or name
-get = async (req, res, next) => {
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
-    if(!exercise)
-        //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
-    if(!exercise)
-        return next(`Couldn't find exercise ${req.params.id}.`)
-
-    req.body = exercise
-    next()
 }
 
 //adding an exercise
@@ -73,20 +53,12 @@ add = async (req, res, next) => {
 //updating an exercise
 update = async (req, res, next) => {
     //check if exercise exists
-    //--by id
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
+    let exercise = await get.exercise(req.params.exercise)
     if(!exercise)
-        //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
-    if(!exercise)
-        return next(`Couldn't find exercise ${req.params.id}.`)
+        return res.status(503).json({message: `Couldn't find exercise ${req.params.id}.`})
     
     //rebuild reqbody
-    for(let key in exercise) {
-        if(req.body.hasOwnProperty(key))
-            exercise[key] = req.body[key]
-    }
-    req.body = exercise
+    req.body = updater(exercise, req.body)
 
     next()
 }
@@ -111,7 +83,6 @@ remove = async (req, res, next) => {
 //EXPORTS
 module.exports = {
     add,
-    get,
     update,
     remove,
     check_exercise,

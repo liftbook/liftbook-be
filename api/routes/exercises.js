@@ -35,23 +35,23 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:eid', mwExercise.get, async (req, res) => {
+router.get('/:exercise', async (req, res) => {
     try {
-        const exercise = await modelExercises.get_exercise_by({eid: req.body.eid})
+        const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
         exercise
         ?   res.status(200).json(exercise)
-        :   res.status(404).json({message: `Couldn't find exercise: ${req.params.id}`})
+        :   res.status(404).json({message: `Couldn't find exercise: ${req.params.exercise}`})
     } catch (err) {
-        console.log('get exercise by id err:', err)
+        console.log('get exercise by name or id err:', err)
         res.status(500).json(err)
     }
 })
 //update
-router.put('/:eid', mwExercise.update, async (req, res) => {
+router.put('/:exercise', mwExercise.update, async (req, res) => {
     try {
         await modelExercises.update_exercise(req.body.eid, req.body)
         ?   res.status(200).json(req.body)
-        :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
+        :   res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
     } catch (err) {
         console.log('update exercise by id err:', err)
         res.status(500).json(err)

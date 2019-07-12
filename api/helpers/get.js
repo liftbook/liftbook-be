@@ -16,7 +16,7 @@ user_by_email = async (email) => {
 }
 //exercise is either an exercise name or id
 exercise = async (exercise) => {
-    const exxxercise = await modelexxxercises.get_by_id_or_name(exercise)
+    const exxxercise = await modelExercises.get_by_id_or_name(exercise)
     if(exxxercise) return exxxercise
     else return false
 }
