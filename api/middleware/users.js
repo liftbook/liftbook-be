@@ -2,7 +2,6 @@ const modelUsers = require('../models/users')
 
 check_user = async (req, res, next) => {
     const username = req.params.username || req.body.udername
-    console.log('username', username)
     const user = await modelUsers.get_user_by({username: username})
     if(user) {
         req.body.uid = user.uid

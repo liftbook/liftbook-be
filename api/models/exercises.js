@@ -15,6 +15,8 @@ const get_all_exercises = async () =>
 //takes an object{eid: 133337}
 const get_exercise_by = async value =>
     await db('exercises').where(value).first()
+const get_by_id_or_name = async value =>
+    await db('exercises').where({eid: value}).orWhere({name: value}).first()
 
 //update
 const update_exercise = async (id, exercise) => {
@@ -30,6 +32,7 @@ module.exports = {
     add_exercise,
     get_all_exercises,
     get_exercise_by,
+    get_by_id_or_name,
     update_exercise,
     remove_exercise
 }

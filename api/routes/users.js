@@ -5,6 +5,7 @@ const express = require('express')
 //local
 const mwAuth = require('../middleware/auth')
 const mwUsers = require('../middleware/users')
+const mwExercises = require('../middleware/exercises')
 
 //SETUP
 const router = express.Router()
@@ -76,12 +77,12 @@ router.get('/:username/logs', mwUsers.check_user, async (req, res) => {
 /*
     NEEDS MIDDLEWARE
 */
-router.get('/:username/logs/:exercise', async (req, res) => {
+router.get('/:username/logs/:exercise', mwUsers.check_user, mwExercises.check_exercise, async (req, res) => {
     try {
-        const logs = await modelLogs.get_all_user_logs_for_exercise(req.params.uid, req.params.eid)
+        const logs = await modelLogs.get_all_user_logs_for_exercise(req.body.uid, req.body.eid)
         logs.length > 0
         ?   res.status(200).json(logs)
-        :   res.status(404).json({message: `Couldn't find any logs for exercise ${req.params.eid} by user ${req.params.uid}.`})
+        :   res.status(404).json({message: `Couldn't find any logs for exercise ${req.params.exercise} by user ${req.params.username}.`})
     } catch (err) {
         console.log('get all user logs for exercise err:', err)
         res.status(500).json(err)

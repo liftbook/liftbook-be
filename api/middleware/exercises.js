@@ -5,6 +5,16 @@ const check_fields = require('../helpers/check_req_fields')
 const modelExercises = require('../models/exercises')
 const modelUsers = require('../models/users')
 
+check_exercise = async (req, res, next) => {
+    let exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
+    if(exercise) {
+        req.body.eid = exercise.eid
+        next()
+    }
+    else
+        res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
+}
+
 //getting exercise by eid or name
 get = async (req, res, next) => {
     let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
@@ -93,5 +103,6 @@ module.exports = {
     add,
     get,
     update,
-    remove
+    remove,
+    check_exercise,
 }
