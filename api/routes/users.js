@@ -4,6 +4,7 @@
 const express = require('express')
 //local
 const mwAuth = require('../middleware/auth')
+const mwUsers = require('../middleware/users')
 
 //SETUP
 const router = express.Router()
@@ -61,9 +62,9 @@ router.get('/:username', async (req, res) => {
 /*
     NEEDS MIDDLEWARE
 */
-router.get('/:username/logs', async (req, res) => {
+router.get('/:username/logs', mwUsers.check_user, async (req, res) => {
     try {
-        const logs = await modelLogs.get_all_user_logs(req.params.uid)
+        const logs = await modelLogs.get_all_user_logs(req.body.uid)
         logs.length > 0
         ?   res.status(200).json(logs)
         :   res.status(404).json({message: `Couldn't find any logs for user ${req.params.uid}.`})
