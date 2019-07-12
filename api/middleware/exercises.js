@@ -32,7 +32,6 @@ add = async (req, res, next) => {
 
     //check if username exists and get uid if it does
     const user = await modelUsers.get_user_by({username: req.body.username})
-    console.log('user', user)
     if(user)
         req.body.uid = user.uid
     else 

@@ -9,6 +9,7 @@ const mwAuth = require('../middleware/auth')
 const router = express.Router()
 //models
 const modelUsers = require('../models/users')
+const modelLogs = require('../models/logs')
 
 //ROUTES
 //create
@@ -34,7 +35,7 @@ router.post('/login', mwAuth.authenticate, async (req, res) => {
         res.status(500).json(err)
     }
 })
-//RRRRRRrrrr
+//read
 router.get('/', async (req, res) => {
     try {
         const users = await modelUsers.get_all_users()
@@ -57,6 +58,33 @@ router.get('/:username', async (req, res) => {
         res.status(500).json(err)
     }
 })
-
+/*
+    NEEDS MIDDLEWARE
+*/
+router.get('/:username/logs', async (req, res) => {
+    try {
+        const logs = await modelLogs.get_all_user_logs(req.params.uid)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find any logs for user ${req.params.uid}.`})
+    } catch (err) {
+        console.log('get all user logs for exercise err:', err)
+        res.status(500).json(err)
+    }
+})
+/*
+    NEEDS MIDDLEWARE
+*/
+router.get('/:username/logs/:exercise', async (req, res) => {
+    try {
+        const logs = await modelLogs.get_all_user_logs_for_exercise(req.params.uid, req.params.eid)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find any logs for exercise ${req.params.eid} by user ${req.params.uid}.`})
+    } catch (err) {
+        console.log('get all user logs for exercise err:', err)
+        res.status(500).json(err)
+    }
+})
 //EXPORTS
 module.exports = router

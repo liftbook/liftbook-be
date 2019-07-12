@@ -21,7 +21,7 @@ const get_all_user_logs_for_exercise = async (uid, eid) =>
 
 //update
 const update_log = async (lid, log) =>
-    null
+    await db('logs').where({lid: lid}).update(log)
 
 //delete
 const remove_log = async lid =>

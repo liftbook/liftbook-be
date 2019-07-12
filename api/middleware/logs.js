@@ -15,16 +15,16 @@ add = async (req, res, next) => {
         return next(`These fields are required: ${required_fields}.`)
     
     //check if user exists
-    const user = await modelUsers.get_user_by({username: req.body.user})
+    const user = await modelUsers.get_user_by({username: req.body.username})
     if(!user)
         return next(`User: ${req.body.username} doesn't exist.`)
     
     //check if exercise exists
     let exercise
-    if(req.body.name) 
-        exercise = await modelExercises.get_exercise_by({name: req.body.name})
+    if(req.body.exercise_name) 
+        exercise = await modelExercises.get_exercise_by({name: req.body.exercise_name})
     if(!exercise && req.body.exercise_id)
-        exercise = await  modelExercises.get_exercise_by({eid: req.body.exercise_name})
+        exercise = await  modelExercises.get_exercise_by({eid: req.body.exercise_id})
     if(!exercise)
         return next(`Can't find specified exercise.`)
     
@@ -65,4 +65,5 @@ update = async (req, res, next) => {
 //EXPORTS
 module.exports = {
     add,
+    update
 }

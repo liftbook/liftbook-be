@@ -5,6 +5,7 @@ const helmet = require('helmet')
 //routes
 const routesUsers = require('./routes/users')
 const routesExercises = require('./routes/exercises')
+const routesLogs = require('./routes/logs')
 
 //SETUP
 const server = express()
@@ -17,6 +18,7 @@ server.use(express.json()) //json all the things!
 //ROUTES
 server.use('/api/users', routesUsers)
 server.use('/api/exercises', routesExercises)
+server.use('/api/logs', routesLogs)
 
 //EXPORTS
 module.exports = server
