@@ -3,7 +3,7 @@
 //IMPORTS
 const express = require('express')
 //local
-// const mwLogs = require('../middleware/logs')
+const mwLogs = require('../middleware/logs')
 
 //SETUP
 const router = express.Router()
@@ -12,7 +12,7 @@ const modelLogs = require('../models/logs')
 
 //ROUTES
 //create
-router.post('/', async (req, res) => {
+router.post('/', mwLogs.add, async (req, res) => {
     try {
         const log = await modelLogs.add_log(req.body)
         log
