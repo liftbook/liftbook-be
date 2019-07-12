@@ -16,7 +16,7 @@ authenticate = async (req, res, next) => {
 
     //check if all required keys are provided
     if(!check.required_fields(req.body, ...required_fields))
-        return next(`These fields are required: ${required_fields}.`)
+        return res.status(500).json({message: `The required fields are: ${required_fields}.`})
 
     //rebuild reqbody, removing any possible extra fields
     req.body = {
@@ -48,7 +48,7 @@ register = async (req, res, next) => {
 
     //check if all required keys are provided
     if(!check.required_fields(req.body, ...required_fields))
-        return next(`These fields are required: ${required_fields}.`)
+        return res.status(500).json({message: `The required fields are: ${required_fields}.`})
 
     //check if username is unique
     if(await get.user_by_username(req.body.username))
