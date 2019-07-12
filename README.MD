@@ -12,14 +12,15 @@ and add more functionality to the API.
 - [Support](#support)
 - [Credits](#credits)
 
-## Endpoints
+# Endpoints
 
-The API is hosted at `https://lift-book.herokuapp.com/api/`
+The API is hosted at `https://lift-book.herokuapp.com/api/`. Please make sure you are adding that complete
+URL before the endpoint route.
 
 The following endpoints are available for use in your React app. Go crazy!
 
 
-# User Endpoints
+## User Endpoints
 
 ```
 POST -- /users/register 
@@ -58,12 +59,44 @@ Function: Returns {message: 'user [username] has been removed'}
 ```
 
 
-## Support
+## Exercise Endpoints
 
-Please contact Dustin or Mychal via Slack, fax, or by payphone for support with any issues. We also
+```
+POST -- /exercises 
+Returns: object
+Function: Adds an exercise to the database, returns that exercise
+Data Structure:
+    name: "" - required
+    username: "" - required
+    description: "" - required
+    icon_src: "" - optional
+
+
+GET -- /exercises
+Returns: array of objects
+Function: Returns all exercises
+
+GET -- /exercises/[exercise name or id]
+Returns: object
+Function: Returns a single exercise
+
+PUT -- /exercises/[exercise name or id]
+Returns: object
+Function: Returns an updated exercise
+
+DELETE -- /exercises/[exercise name or id]
+Returns: object
+Function: Returns a successful message
+```
+
+
+# Support
+
+Please contact Dustin or Mychal via Slack, fax, or payphone for support with any issues. We also
 accept messages by carrier pidgeon.
 
-## Credits
+
+# Credits
 
 The API you are using has been brought to you by Double Dragon Development!
     
