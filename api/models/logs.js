@@ -15,9 +15,9 @@ const get_log_by = async value =>
     await db('logs').where(value).first()
 //USER
 const get_all_user_logs = async uid =>
-    null
+    await db('logs').where({uid})
 const get_all_user_logs_for_exercise = async (uid, eid) =>
-    null
+    await db('logs').where({uid: uid, eid: eid})
 
 //update
 const update_log = async (lid, log) =>
