@@ -60,11 +60,13 @@ Function: Returns {message: 'user [username] has been removed'}
 
 ## Support
 
-Please [open an issue](https://github.com/fraction/readme-boilerplate/issues/new) for support.
+Please contact Dustin or Mychal via Slack, fax, or by payphone for support with any issues. We also
+accept messages by carrier pidgeon.
 
 ## Credits
 
 The API you are using has been brought to you by Double Dragon Development!
     
-    Dustin Snoap - Back End Engineer, Pizza Roll Master of the 9th circle
-    Mychal Hall - Back End Engineer, Overseer of General Snack Distribution
+Dustin Snoap - Back End Engineer, Pizza Roll Master of the 9th circle
+
+Mychal Hall - Back End Engineer, Overseer of General Snack Distribution
