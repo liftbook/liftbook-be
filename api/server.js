@@ -18,5 +18,10 @@ server.use(express.json()) //json all the things!
 server.use('/api/users', routesUsers)
 server.use('/api/exercises', routesExercises)
 
+// API is online Notification
+server.get("/", (req, res) => {
+    res.send("<h1>API is online</h1>");
+  });
+
 //EXPORTS
 module.exports = server
