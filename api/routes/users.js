@@ -4,11 +4,14 @@
 const express = require('express')
 //local
 const mwAuth = require('../middleware/auth')
+const mwUsers = require('../middleware/users')
+const mwExercises = require('../middleware/exercises')
 
 //SETUP
 const router = express.Router()
 //models
 const modelUsers = require('../models/users')
+const modelLogs = require('../models/logs')
 
 //ROUTES
 //create
@@ -23,7 +26,7 @@ router.post('/register', mwAuth.register, async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.post('/login', mwAuth.authenticate, async (req, res) => {
+router.post('/login', mwAuth.authenticate, mwAuth.username_exists, mwAuth.password_matches, async (req, res) => {
     try {
         const user = await modelUsers.get_user_by({username: req.body.username})
         user
@@ -34,7 +37,7 @@ router.post('/login', mwAuth.authenticate, async (req, res) => {
         res.status(500).json(err)
     }
 })
-//RRRRRRrrrr
+//read
 router.get('/', async (req, res) => {
     try {
         const users = await modelUsers.get_all_users()
@@ -57,6 +60,33 @@ router.get('/:username', async (req, res) => {
         res.status(500).json(err)
     }
 })
-
+/*
+    NEEDS MIDDLEWARE
+*/
+router.get('/:username/logs', mwUsers.check_user, async (req, res) => {
+    try {
+        const logs = await modelLogs.get_all_user_logs(req.body.uid)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find any logs for user ${req.params.uid}.`})
+    } catch (err) {
+        console.log('get all user logs for exercise err:', err)
+        res.status(500).json(err)
+    }
+})
+/*
+    NEEDS MIDDLEWARE
+*/
+router.get('/:username/logs/:exercise', mwUsers.check_user, mwExercises.get, async (req, res) => {
+    try {
+        const logs = await modelLogs.get_all_user_logs_for_exercise(req.body.uid, req.body.eid)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find any logs for exercise ${req.params.exercise} by user ${req.params.username}.`})
+    } catch (err) {
+        console.log('get all user logs for exercise err:', err)
+        res.status(500).json(err)
+    }
+})
 //EXPORTS
 module.exports = router
