@@ -13,13 +13,8 @@ const check = require('../helpers/check')
 const retrieve = require('../helpers/retreive')
 // MIDDLEWARE
 
-// getting record by rid
-
 check_required = (req, res, next) => {
   const required_fields = ['username', 'exercise']
-
-  //helps check for both exercise_name and exercise_id
-  req.body.exercise = req.body.exercise_name || req.body.exercise_id
 
   //check if all required fields are in the request body
   //required_fields must be preceded by ... not sure why

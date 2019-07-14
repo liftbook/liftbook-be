@@ -39,12 +39,12 @@ router.get('/', async (req, res) => {
     res.status(500).json(err);
   }
 })
-router.get("/:uid", async (req, res) => {
+router.get("/:username", async (req, res) => {
   try {
-    const records = await modelRecords.get_record_by({ uid: req.body.uid });
-    records
-      ? res.status(200).json(records)
-      : res.status(404).json({ message: `Couldn't get records` });
+    const records = await modelRecords.get_all_user_records(req.params.username)
+    records.length > 0
+    ? res.status(200).json(records)
+    : res.status(404).json({ message: `Couldn't find records for ${req.params.username}` });
   } catch (err) {
     console.log("Unable to comply", err);
     res.status(500).json(err);

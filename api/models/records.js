@@ -22,6 +22,13 @@ const get_record_by = async value =>
     .where(value)
     .first();
 
+const get_all_user_records = async (username) => {
+  const that = await db.select('records.*')
+    .from('records')
+    .join('users', {'users.uid': 'records.uid'})
+    .where({username: username})
+  return that
+}
 // update
 
 const update_record = async (id, record) => {
@@ -42,6 +49,7 @@ const remove_record = async rid =>
 module.exports = {
   add_record,
   get_all_records,
+  get_all_user_records,
   get_record_by,
   update_record,
   remove_record
