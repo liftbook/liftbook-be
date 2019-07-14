@@ -22,7 +22,7 @@ exercise = async (exercise) => {
 }
 //log_id is an id
 log = async (log_id) => {
-    const log = await modelLogs.get_log_by({lid: log_id})
+    const log = await modelLogs.get_by({lid: log_id})
     if(log) return log
     else return false
 }

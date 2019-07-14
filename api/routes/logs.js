@@ -78,7 +78,7 @@ router.get('/:username/logs/:exercise', async (req, res) => {
 })
 
 //update
-router.get('/:log', mwLog.get, mwLog.update, async (req, res) => {
+router.put('/:log', mwLog.get, mwLog.update, async (req, res) => {
     try {
         const log = await modelLog.update(req.body)
         log

@@ -35,7 +35,7 @@ prepare_new = async (req, res, next) => {
         uid: user.uid,
         eid: exercise.eid,
         duration: req.body.duration,
-        repititions: req.body.repititions,
+        repetitions: req.body.repititions,
         distance: req.body.distance,
         heart_rate: req.body.heart_rate,
         weight: req.body.weight,

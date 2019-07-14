@@ -29,14 +29,16 @@ const get_user_logs_by_exercise = async (username, exercise) =>
         .from('logs')
         .join('users', {'users.uid': 'logs.uid'})
         .where({'users.username': username})
-        .join('exercises', {'exercises.eid': 'records.eid'})
+        .join('exercises', {'exercises.eid': 'logs.eid'})
         .where({'exercises.name': exercise})
         .orWhere({'exercises.eid': exercise})
 //update
-const update = async (log) =>
+const update = async (log) => {
     await db('logs')
         .where({lid: log.lid})
         .update(log)
+    return await db('logs').where({lid: log.lid})
+}
 //delete
 const remove_by = async (value) =>
     await db('logs')

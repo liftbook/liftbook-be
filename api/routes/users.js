@@ -11,7 +11,7 @@ const mwExercises = require('../middleware/exercises')
 const router = express.Router()
 //models
 const modelUsers = require('../models/users')
-const modelLogs = require('../models/logs')
+const modelLog = require('../models/logs')
 
 //ROUTES
 //create
@@ -57,6 +57,28 @@ router.get('/:username', async (req, res) => {
         :   res.status(404).json({message: `Couldn't find user: ${req.params.id}`})
     } catch (err) {
         console.log('get user by id err:',err)
+        res.status(500).json(err)
+    }
+})
+router.get('/:username/logs', async (req, res) => {
+    try {
+        const logs = await modelLog.get_user_logs(req.params.username)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find logs for ${req.params.username}`})
+    } catch (err) {
+        console.log('get user logs err:', err)
+        res.status(500).json(err)
+    }
+})
+router.get('/:username/logs/:exercise', async (req, res) => {
+    try {
+        const logs = await modelLog.get_user_logs_by_exercise(req.params.username, req.params.exercise)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find a log for exercise ${req.params.exercise} for user ${req.params.username}.`})
+    } catch (err) {
+        console.log('get user logs for exercise err:', err)
         res.status(500).json(err)
     }
 })
