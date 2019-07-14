@@ -13,6 +13,20 @@ unique = async (reqbody, unique, model) => {
   return true
 }
 
+// [
+//   {key: value, value: value, model: model},
+//   {key: value, value: value, model: model},
+//   {key: value, value: value, model: model},
+// ]
+//loops through a list of objects, checking if each one exists
+// existance = async (things) => {
+//   things.forEach(thing => {
+//     if(!await thing.model.get_by({[thing.key]: thing.value}))
+//       return thing
+//   })
+//   return true
+// }
+
 module.exports = {
     required,
     unique,

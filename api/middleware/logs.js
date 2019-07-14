@@ -1,10 +1,45 @@
 //IMPORTS
 const uuid = require('uuid')
 //local
-const check_fields = require('../helpers/check_req_fields')
 const modelLogs = require('../models/logs')
 const modelUsers = require('../models/users')
 const modelExercises = require('../models/exercises')
+//helpers
+const updater = require('../helpers/update_body')
+const retrieve = require('../helpers/retreive')
+const check = require('../helpers/check')
+
+check_required = async (req, res, next) => {
+    const required_fields = ['username']
+    const requirements_met = await check.required(req.body, required_fields)
+    if(requirements_met) return res.status(612).json({message: `Required fields are ${required_fields}.`})
+    next()
+}
+
+prepare_new = async (req, res, next) => {
+    const user = await retrieve.user_by_username(req.body.username)
+    req.body = {
+        lid: uuid.v4(),
+        uid: user.uid,
+        eid: exercise.eid,
+        repetitions: req.body.repetitions,
+        distance: req.body.distance,
+        heart_rate: req.body.heart_rate,
+        weight: req.body.weight,
+        calories: req.body.calories,
+        notes: req.body.notes,
+        datetime: req.body.datetime
+    }
+    next()
+}
+
+get = async (req, res, next) => {
+    let exercise = await retrieve.exercise(req.params.exercise)
+    if(!exercise)
+        return res.status(504).json({message: `Couldn't find exercise ${req.params.exercise}`})
+    req.body.x = exercise
+    next()
+}
 
 //add new
 add = async (req, res, next) => {

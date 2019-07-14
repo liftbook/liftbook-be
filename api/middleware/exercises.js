@@ -10,6 +10,9 @@ const check = require('../helpers/check')
 //removes all unnessary fields for protection
 prepare_new = async (req, res, next) => {
     const user = await retrieve.user_by_username(req.body.username)
+    if(!user)
+        return res.status(404).json({message: `Username ${req.body.username} couldn't be found.`})
+
     req.body = {
         eid: uuid.v4(),
         created_by: user.uid,
@@ -18,6 +21,16 @@ prepare_new = async (req, res, next) => {
         description: req.body.description,
         icon_src: req.body.icon_src
     }
+    next()
+}
+
+//takes in an exercise id or name from params
+//finds exercise in the db and adds it to req.body.x
+get = async (req, res, next) => {
+    let exercise = await retrieve.exercise(req.params.exercise)
+    if(!exercise)
+        return res.status(504).json({message: `Couldn't find exercise ${req.params.exercise}`})
+    req.body.x = exercise
     next()
 }
 
@@ -38,14 +51,13 @@ update = async (req, res, next) => {
     //updates req.body.x with any matching fields in req.body
     //then replaces req.body with req.body.x
     req.body = updater(req.body.x, req.body)
-    console.log('update', req.body)
     next()
 }
 
 check_required = async (req, res, next) => {
     const required_fields = ['name', 'username', 'description']
     const requirements_met = await check.required(req.body, required_fields)
-    if(requirements_met) return res.status(612).json({message: `nope`})
+    if(requirements_met) return res.status(612).json({message: `Required fields are ${required_fields}.`})
     next()
 }
 
@@ -56,27 +68,16 @@ check_unqiue = async (req, res, next) => {
     //returns true if test passes
     //returns the key it failed on it test fails
     const unique = await check.unique(req.body, unique_fields, modelExercises)
-    console.log('made it here')
     if(true !== unique)
         return res.status(612).json({message: `${req.body[unique]} is already in use.`})
     next()
 }
 
-//takes in an exercise id or name from params
-//finds exercise in the db and adds it to req.body.x
-get = async (req, res, next) => {
-    let exercise = await retrieve.exercise(req.params.exercise)
-    if(!exercise)
-        return res.status(504).json({message: `Couldn't find exercise ${req.params.exercise}`})
-    req.body.x = exercise
-    next()
-}
-
 //EXPORTS
 module.exports = {
+    prepare_new,
     get,
+    update,
     check_unqiue,
     check_required,
-    prepare_new,
-    update,
 }
