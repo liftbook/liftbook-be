@@ -10,6 +10,7 @@ const modelExercises = require("../models/exercises");
 const modelUsers = require("../models/users");
 
 const check = require('../helpers/check')
+const updater = require('../helpers/update_body')
 const retrieve = require('../helpers/retreive')
 // MIDDLEWARE
 
@@ -52,56 +53,17 @@ prepare_new = async (req, res, next) => {
 }
 
 get = async (req, res, next) => {
-  let record = await modelRecords.get_record_by({ rid: req.params.rid });
-  if (!record) return next(`Sorry, can not find that record.`);
+  const record = await retrieve.record(req.params.record)
+  if(!record)
+    return res.status(404).json({message: `Can't find record ${req.params.record}`})
+  req.body.x = record
+  next()
+}
 
-  req.body = record;
-  next();
-};
-
-// adding a record
-
-add = async (req, res, next) => {
-  const required_fields = ["rid", "uid", "eid"];
-
-  // check if all the keys needed are there
-  if (!check_fields(req.body, ...required_fields))
-    return next(`These fields are required: ${required_fields}.`);
-
-  // check if eid is unique
-  if (await modelRecords.get_record_by({ eid: req.body.eid }))
-    return next(
-      `A record already exists for that exercise! Try updating the existing one`
-    );
-
-  // check if exercise exists and get eid
-  const exercise = await modelExercises.get_exercise_by({
-    eid: req.body.eid
-  });
-  console.log("exercise", exercise);
-  if (exercise) req.body.eid = exercise.eid;
-  else return next(`Exercise: ${req.body.name} doesn't exist.`);
-
-  // check if user exists and get uid
-  const user = await modelUsers.get_user_by({ uid: req.body.uid });
-  console.log("user", user);
-  if (user) req.body.uid = user.uid;
-  else return next(`There is no user with that ID`);
-
-  req.body = {
-    rid: uuid.v4(),
-    uid: req.body.uid,
-    eid: req.body.eid,
-    duration: req.body.duration,
-    repetitions: req.body.repetitions,
-    distance: req.body.distance,
-    heart_rate: req.body.heart_rate,
-    weight: req.body.weight,
-    calories: req.body.calories,
-    dateTime: req.body.dateTime
-  };
-  next();
-};
+update = async (req, res, next) => {
+  req.body = updater(req.body.x, req.body)
+  next()
+}
 
 // remove a record
 remove = async (req, res, next) => {
@@ -119,5 +81,6 @@ module.exports = {
   check_required,
   prepare_new,
   add,
+  update,
   get
 };

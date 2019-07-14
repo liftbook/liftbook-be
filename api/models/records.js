@@ -36,16 +36,15 @@ const get_user_records_by_exercise = async (username, exercise) =>
     .join('exercises', {'exercises.eid': 'records.eid'})
     .where({'exercises.name': exercise})
     .orWhere({'exercises.eid': exercise})
-// update
 
-const update_record = async (id, record) => {
+// update
+const update_record = async (record) => {
   return await db("records")
-    .where({ rid: id })
+    .where({ rid: record.rid })
     .update(record);
-};
+}
 
 // delete
-
 const remove_record = async rid =>
   await db("records")
     .where({ rid: rid })

@@ -63,9 +63,9 @@ router.get("/:username/:exercise", async (req, res) => {
 });
 
 // update
-router.put("/:uid/:eid", async (req, res) => {
+router.put("/:record", mwRecord.get, mwRecord.update, async (req, res) => {
   try {
-    const record = await modelRecords.update_record(req.body.rid, req.body);
+    const record = await modelRecords.update_record(req.body);
     record
       ? res.status(200).json(req.body)
       : res.status(404).json({ message: "Unable to update the record yo!" });
