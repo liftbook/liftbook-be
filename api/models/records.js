@@ -9,8 +9,8 @@ const db = require("../../data/config.js");
 // create
 
 const add_record = async record => {
-  await db("record").insert(record);
-  return get_record_by({ rid: exercise.rid });
+  await db("records").insert(record);
+  return get_record_by({ rid: record.rid });
 };
 
 // read

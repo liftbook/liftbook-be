@@ -23,7 +23,7 @@ get = async (req, res, next) => {
 
 // adding a record
 
-ass = async (req, res, next) => {
+add = async (req, res, next) => {
   const required_fields = ["rid", "uid", "eid"];
 
   // check if all the keys needed are there
@@ -38,7 +38,7 @@ ass = async (req, res, next) => {
 
   // check if exercise exists and get eid
   const exercise = await modelExercises.get_exercise_by({
-    name: req.body.name
+    eid: req.body.eid
   });
   console.log("exercise", exercise);
   if (exercise) req.body.eid = exercise.eid;
@@ -60,24 +60,8 @@ ass = async (req, res, next) => {
     heart_rate: req.body.heart_rate,
     weight: req.body.weight,
     calories: req.body.calories,
-    notes: req.body.notes,
     dateTime: req.body.dateTime
   };
-  next();
-};
-
-// updating a record
-update = async (req, res, next) => {
-  // check if record exists
-  let record = await modelRecords.get_record_by({ rid: record.params.rid });
-  if (!record) return next(`Could not find record ${req.params.rid}`);
-
-  // rebuild reqbody
-  for (let key in record) {
-    if (req.body.hasOwnProperty(key)) exercise[key] = req.body[key];
-  }
-  req.body = record;
-
   next();
 };
 
@@ -87,7 +71,7 @@ remove = async (req, res, next) => {
   let record = await modelRecords.get_record_by({ rid: req.params.rid });
   if (!record) return next(`Could not find record ${req.params.rid}`);
 
-  req.body = exercise;
+  req.body = record;
 
   next();
 };
@@ -95,7 +79,5 @@ remove = async (req, res, next) => {
 //EXPORTS
 module.exports = {
   add,
-  get,
-  update,
-  remove
+  get
 };
