@@ -15,7 +15,7 @@ const modelRecords = require("../models/records");
 // ROUTES
 
 // create
-router.post("/", mwRecord.add, async (req, res) => {
+router.post("/", mwRecord.check_required, mwRecord.prepare_new, async (req, res) => {
   try {
     const record = await modelRecords.add_record(req.body);
     record
@@ -28,6 +28,17 @@ router.post("/", mwRecord.add, async (req, res) => {
 });
 
 // read
+router.get('/', async (req, res) => {
+  try {
+    const records = await modelRecords.get_all_records()
+    records.length > 0
+    ? res.status(200).json(records)
+    : res.status(404).json({message: `No records found.`})
+  } catch (err) {
+    console.log("Unable to comply", err);
+    res.status(500).json(err);
+  }
+})
 router.get("/:uid", async (req, res) => {
   try {
     const records = await modelRecords.get_record_by({ uid: req.body.uid });
