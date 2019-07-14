@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
 })
 router.get("/:username", async (req, res) => {
   try {
-    const records = await modelRecords.get_all_user_records(req.params.username)
+    const records = await modelRecords.get_user_records(req.params.username)
     records.length > 0
     ? res.status(200).json(records)
     : res.status(404).json({ message: `Couldn't find records for ${req.params.username}` });
@@ -50,14 +50,12 @@ router.get("/:username", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:uid/:eid", async (req, res) => {
+router.get("/:username/:exercise", async (req, res) => {
   try {
-    const record = await modelRecords.get_record_by({ eid: req.body.eid });
+    const record = await modelRecords.get_user_records_by_exercise(req.params.username, req.params.exercise);
     record
-      ? res.status(200).json(record)
-      : res.status(404).json({
-          messages: "Could not find a record for that exercise! Go make one!"
-        });
+    ? res.status(200).json(record)
+    : res.status(404).json({messages: "Could not find a record for that exercise! Go make one!"});
   } catch (err) {
     console.log("Unable to comply", err);
     res.status(500).json(err);
