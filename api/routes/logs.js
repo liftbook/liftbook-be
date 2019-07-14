@@ -3,7 +3,7 @@
 const express = require('express')
 //local
 const modelLog = require('../models/logs')
-// const middleware
+const mwLog = require('../middleware/logs')
 
 //SETUP
 const router = express.Router()
@@ -17,7 +17,7 @@ const router = express.Router()
 //|_______||_______||_______|  |___|  |_||_______||_______|  |___|  |_______||_______|
 
 //create
-router.post('/', async (req, res) => {
+router.post('/', mwLog.check_required, mwLog.prepare_new, async (req, res) => {
     try {
         const log = await modelLog.add(req.body)
         log
@@ -41,9 +41,9 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:lid', async (req, res) => {
+router.get('/:log', async (req, res) => {
     try {
-        const log = await modelLog.get_by({lid: req.params.lid})
+        const log = await modelLog.get_by({lid: req.params.log})
         log
         ?   res.status(200).json(log)
         :   res.status(404).json({message: `No logs found.`})
@@ -78,12 +78,12 @@ router.get('/:username/logs/:exercise', async (req, res) => {
 })
 
 //update
-router.get('/:lid', async (req, res) => {
+router.get('/:log', mwLog.get, mwLog.update, async (req, res) => {
     try {
         const log = await modelLog.update(req.body)
         log
         ?   res.status(200).json(log)
-        :   res.status(404).json({message: `Couldn't update log ${req.params.lid}`})
+        :   res.status(404).json({message: `Couldn't update log ${req.params.log}`})
     } catch (err) {
         console.log('update log err:', err)
         res.status(500).json(err)
@@ -91,11 +91,11 @@ router.get('/:lid', async (req, res) => {
 })
 
 //delete
-router.delete('/:lid', async (req, res) => {
+router.delete('/:log', async (req, res) => {
     try {
-        await modelLog.remove_by({lid: req.params.lid})
-        ?   res.status(200).json({message: `Log ${req.params.lid} has been removed.`})
-        :   res.status(404).json({message: `Log ${req.params.lid} couldn't be found.`})
+        await modelLog.remove_by({lid: req.params.log})
+        ?   res.status(200).json({message: `Log ${req.params.log} has been removed.`})
+        :   res.status(404).json({message: `Log ${req.params.log} couldn't be found.`})
     } catch (err) {
         console.log('remove log by id err:', err)
         res.status(500).json(err)
