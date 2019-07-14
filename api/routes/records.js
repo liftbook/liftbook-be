@@ -76,9 +76,9 @@ router.put("/:record", mwRecord.get, mwRecord.update, async (req, res) => {
 });
 
 // delete
-router.delete("/:uid/:eid", async (req, res) => {
+router.delete("/:rid", async (req, res) => {
   try {
-    (await modelRecords.remove_record(req.body.rid))
+    (await modelRecords.remove_record(req.params.rid))
       ? res
           .status(200)
           .json({ message: `Record has been removed` })
