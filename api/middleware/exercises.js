@@ -1,89 +1,82 @@
 //IMPORTS
 const uuid = require('uuid')
 //local
-const check_fields = require('../helpers/check_req_fields')
-
 const modelExercises = require('../models/exercises')
-const modelUsers = require('../models/users')
 const updater = require('../helpers/update_body')
-const get = require('../helpers/get')
+const retrieve = require('../helpers/retreive')
+const check = require('../helpers/check')
 
-check_exercise = async (req, res, next) => {
-    const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
-    if(exercise) {
-        req.body.eid = exercise.eid
-        next()
-    }
-    else
-        res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
-}
-
-//adding an exercise
-add = async (req, res, next) => {
-    const required_fields = ['name', 'username', 'description']
-
-    //check if all required keys are provided
-    if(!check_fields(req.body, ...required_fields))
-        return next(`These fields are required: ${required_fields}.`)
-
-    //check if name is unique
-    if(await modelExercises.get_exercise_by({name: req.body.name}))
-        return next(`Exercise name: ${req.body.name} is currently in use.`)
-
-    //check if username exists and get uid if it does
-    const user = await modelUsers.get_user_by({username: req.body.username})
-    if(user)
-        req.body.uid = user.uid
-    else 
-        return next(`User: ${req.body.username} doesn't exist.`)
-
-    //rebuild reqbody
+//prepares the reqbody for insertion into the db
+//removes all unnessary fields for protection
+prepare_new = async (req, res, next) => {
+    const user = await retrieve.user_by_username(req.body.username)
     req.body = {
         eid: uuid.v4(),
-        created_by: req.body.uid,
-        updated_by: req.body.uid,
+        created_by: user.uid,
+        updated_by: user.uid,
         name: req.body.name,
         description: req.body.description,
         icon_src: req.body.icon_src
     }
-
     next()
 }
 
-//updating an exercise
+//MUST proceed "get" middleware
 update = async (req, res, next) => {
-    //check if exercise exists
-    let exercise = await get.exercise(req.params.exercise)
-    if(!exercise)
-        return res.status(503).json({message: `Couldn't find exercise ${req.params.id}.`})
-    
-    //rebuild reqbody
-    req.body = updater(exercise, req.body)
+    //if a username is provided and exists in the db
+    //updates the "updated_by" field with the uid of that user
+    //otherwise sets "updated_by" to an empty string
+    if(req.body.username) {
+        const user = await retrieve.user_by_username(req.body.username)
+        user
+        ?   req.body.updated_by = user.uid
+        :   req.body.updated_by = ''
+    }
+    else
+        req.body.updated_by = ''
 
+    //updates req.body.x with any matching fields in req.body
+    //then replaces req.body with req.body.x
+    req.body = updater(req.body.x, req.body)
+    console.log('update', req.body)
     next()
 }
 
-//remove an exercise
-remove = async (req, res, next) => {
-    //check if exercise exists
-        //--by id
-    let exercise = await modelExercises.get_exercise_by({eid: req.params.eid})
-    if(!exercise)
-        //--by name
-        exercise = await modelExercises.get_exercise_by({name: req.params.eid})
-    if(!exercise)
-        return next(`Couldn't find exercise ${req.params.eid}.`)
-    
-    //rebuild reqbody
-    req.body = exercise
+check_required = async (req, res, next) => {
+    const required_fields = ['name', 'username', 'description']
+    const requirements_met = await check.required(req.body, required_fields)
+    if(requirements_met) return res.status(612).json({message: `nope`})
+    next()
+}
 
+check_unqiue = async (req, res, next) => {
+    const unique_fields = ['eid', 'name'] //unique to exercises
+    //loops through req.body and checks if any keys match the unique fields
+    //if there's a match, it checks to see if it's value already exists in the db
+    //returns true if test passes
+    //returns the key it failed on it test fails
+    const unique = await check.unique(req.body, unique_fields, modelExercises)
+    console.log('made it here')
+    if(true !== unique)
+        return res.status(612).json({message: `${req.body[unique]} is already in use.`})
+    next()
+}
+
+//takes in an exercise id or name from params
+//finds exercise in the db and adds it to req.body.x
+get = async (req, res, next) => {
+    let exercise = await retrieve.exercise(req.params.exercise)
+    if(!exercise)
+        return res.status(504).json({message: `Couldn't find exercise ${req.params.exercise}`})
+    req.body.x = exercise
     next()
 }
 
 //EXPORTS
 module.exports = {
-    add,
+    get,
+    check_unqiue,
+    check_required,
+    prepare_new,
     update,
-    remove,
-    check_exercise,
 }

@@ -8,7 +8,7 @@ const jwtGenToken = require('../helpers/jwt_token_generator')
 const jwtSecret = require('../../config/jwt_secret')
 const check_fields = require('../helpers/check_req_fields')
 const check = require('../helpers/check')
-const get = require('../helpers/get')
+const get = require('../helpers/retreive')
 
 //logging in
 authenticate = async (req, res, next) => {

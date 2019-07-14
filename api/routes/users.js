@@ -77,7 +77,7 @@ router.get('/:username/logs', mwUsers.check_user, async (req, res) => {
 /*
     NEEDS MIDDLEWARE
 */
-router.get('/:username/logs/:exercise', mwUsers.check_user, mwExercises.check_exercise, async (req, res) => {
+router.get('/:username/logs/:exercise', mwUsers.check_user, mwExercises.get, async (req, res) => {
     try {
         const logs = await modelLogs.get_all_user_logs_for_exercise(req.body.uid, req.body.eid)
         logs.length > 0
