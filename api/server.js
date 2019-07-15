@@ -7,6 +7,7 @@ const routesLogs = require('./routes/logs')
 const routesUsers = require("./routes/users");
 const routesExercises = require("./routes/exercises");
 const routesRecords = require("./routes/records");
+const routesGoals = require('./routes/goals')
 
 
 //SETUP
@@ -23,6 +24,7 @@ server.use('/api/logs', routesLogs)
 server.use("/api/users", routesUsers);
 server.use("/api/exercises", routesExercises);
 server.use("/api/records", routesRecords);
+server.use('/api/goals', routesGoals)
 
 // API is online Notification
 server.get("/", (req, res) => {

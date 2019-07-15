@@ -3,7 +3,7 @@
 const express = require('express')
 //local
 const modelGoal = require('../models/goals')
-// const mwGoal = require('../middleware/goals.js')
+const mwGoal = require('../middleware/goals.js')
 
 //SETUP
 const router = express.Router()
@@ -49,30 +49,6 @@ router.get('/:goal', async (req, res) => {
         :   res.status(404).json({message: `No goals found.`})
     } catch (err) {
         console.log('get goal by id err:', err)
-        res.status(500).json(err)
-    }
-})
-//MOVE TO USERS
-router.get('/:username/goals', async (req, res) => {
-    try {
-        const goals = await modelGoal.get_user_goals(req.params.username)
-        goals.length > 0
-        ?   res.status(200).json(goals)
-        :   res.status(404).json({message: `Couldn't find goals for ${req.params.username}`})
-    } catch (err) {
-        console.log('get user goals err:', err)
-        res.status(500).json(err)
-    }
-})
-//MOVE TO USERS
-router.get('/:username/goals/:exercise', async (req, res) => {
-    try {
-        const goals = await modelGoal.get_user_goals_by_exercise(req.params.username, req.params.exercise)
-        goals.length > 0
-        ?   res.status(200).json(goals)
-        :   res.status(404).json({message: `Couldn't find a goal for exercise ${req.params.exercise} for user ${req.params.username}.`})
-    } catch (err) {
-        console.log('get user goals for exercise err:', err)
         res.status(500).json(err)
     }
 })
