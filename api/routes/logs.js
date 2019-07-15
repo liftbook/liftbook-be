@@ -1,20 +1,25 @@
 //ENDPOINT: /api/logs
-
 //IMPORTS
 const express = require('express')
 //local
-const mwLogs = require('../middleware/logs')
+const modelLog = require('../models/logs')
+const mwLog = require('../middleware/logs')
 
 //SETUP
 const router = express.Router()
-//models
-const modelLogs = require('../models/logs')
 
-//ROUTES
+// ___      _______  _______    ______    _______  __   __  _______  _______  _______ 
+//|   |    |       ||       |  |    _ |  |       ||  | |  ||       ||       ||       |
+//|   |    |   _   ||    ___|  |   | ||  |   _   ||  | |  ||_     _||    ___||  _____|
+//|   |    |  | |  ||   | __   |   |_||_ |  | |  ||  |_|  |  |   |  |   |___ | |_____ 
+//|   |___ |  |_|  ||   ||  |  |    __  ||  |_|  ||       |  |   |  |    ___||_____  |
+//|       ||       ||   |_| |  |   |  | ||       ||       |  |   |  |   |___  _____| |
+//|_______||_______||_______|  |___|  |_||_______||_______|  |___|  |_______||_______|
+
 //create
-router.post('/', mwLogs.add, async (req, res) => {
+router.post('/', mwLog.check_required, mwLog.prepare_new, async (req, res) => {
     try {
-        const log = await modelLogs.add_log(req.body)
+        const log = await modelLog.add(req.body)
         log
         ?   res.status(201).json(log)
         :   res.status(404).json({message: `Log couldn't be added.`})
@@ -23,10 +28,11 @@ router.post('/', mwLogs.add, async (req, res) => {
         res.status(500).json(err)
     }
 })
+
 //read
 router.get('/', async (req, res) => {
     try {
-        const logs = await modelLogs.get_all_logs()
+        const logs = await modelLog.get_all()
         logs.length > 0
         ?   res.status(200).json(logs)
         :   res.status(404).json({message: `No logs found.`})
@@ -35,63 +41,63 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:lid', async (req, res) => {
+router.get('/:log', async (req, res) => {
     try {
-        const log = await modelLogs.get_log_by({lid: req.params.lid})
+        const log = await modelLog.get_by({lid: req.params.log})
         log
         ?   res.status(200).json(log)
-        :   res.status(404).json({message: `No log found with id: ${req.params.lid}.`})
+        :   res.status(404).json({message: `No logs found.`})
     } catch (err) {
-        console.log('get all user logs err:', err)
+        console.log('get log by id err:', err)
         res.status(500).json(err)
     }
 })
-//update
-router.put('/:lid', mwLogs.update, async (req, res) => {
+//MOVE TO USERS
+router.get('/:username/logs', async (req, res) => {
     try {
-        await modelLogs.update_log(req.params.lid, req.body)
-        ?   res.status(200).json(req.body)
-        :   res.status(404).json({message: `Log ${req.params.lid} couldn't be found.`})
+        const logs = await modelLog.get_user_logs(req.params.username)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find logs for ${req.params.username}`})
+    } catch (err) {
+        console.log('get user logs err:', err)
+        res.status(500).json(err)
+    }
+})
+//MOVE TO USERS
+router.get('/:username/logs/:exercise', async (req, res) => {
+    try {
+        const logs = await modelLog.get_user_logs_by_exercise(req.params.username, req.params.exercise)
+        logs.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json({message: `Couldn't find a log for exercise ${req.params.exercise} for user ${req.params.username}.`})
+    } catch (err) {
+        console.log('get user logs for exercise err:', err)
+        res.status(500).json(err)
+    }
+})
+
+//update
+router.put('/:log', mwLog.get, mwLog.update, async (req, res) => {
+    try {
+        const log = await modelLog.update(req.body)
+        log
+        ?   res.status(200).json(log)
+        :   res.status(404).json({message: `Couldn't update log ${req.params.log}`})
     } catch (err) {
         console.log('update log err:', err)
         res.status(500).json(err)
     }
 })
+
 //delete
-router.delete('/:lid', async (req, res) => {
+router.delete('/:log', async (req, res) => {
     try {
-        await modelLogs.remove_log(req.params.lid)
-        ?   res.status(200).json({message: `Log ${req.params.lid} has been eliminated.`})
-        :   res.status(404).json({message: `Log ${req.params.lid} couldn't be found.`})
+        await modelLog.remove_by({lid: req.params.log})
+        ?   res.status(200).json({message: `Log ${req.params.log} has been removed.`})
+        :   res.status(404).json({message: `Log ${req.params.log} couldn't be found.`})
     } catch (err) {
-        console.log('remove log err:', err)
-        res.status(500).json(err)
-    }
-})
-//??????????????????????????????
-router.delete('/', async (req, res) => {
-    try {
-
-    } catch (err) {
-        console.log('remove all logs err:', err)
-        res.status(500).json(err)
-    }
-})
-//????????????????????????????
-router.delete('/:uid', async (req, res) => {
-    try {
-
-    } catch (err) {
-        console.log('remove all user logs err:', err)
-        res.status(500).json(err)
-    }
-})
-//??????????????????????????????
-router.delete('/:uid/:eid', async (req, res) => {
-    try {
-
-    } catch (err) {
-        console.log('remove all user logs for exercise err', err)
+        console.log('remove log by id err:', err)
         res.status(500).json(err)
     }
 })
