@@ -1,5 +1,6 @@
 const modelExercises = require('../models/exercises')
 const modelUsers = require('../models/users')
+const modelRecords = require('../models/records')
 const modelLogs = require('../models/logs')
 
 //user is a username
@@ -20,6 +21,12 @@ exercise = async (exercise) => {
     if(exxxercise) return exxxercise
     else return false
 }
+//record_id is an id
+record = async (record_id) => {
+    const reccord = await modelRecords.get_record_by({rid: record_id})
+    if(reccord) return reccord
+    else return false
+}
 //log_id is an id
 log = async (log_id) => {
     const log = await modelLogs.get_log_by({lid: log_id})
@@ -30,6 +37,7 @@ log = async (log_id) => {
 module.exports = {
     user_by_username,
     user_by_email,
+    record,
     exercise,
     log
 }
