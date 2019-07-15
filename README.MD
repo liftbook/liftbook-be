@@ -12,6 +12,7 @@ and add more functionality to the API.
    - [User](#User)
    - [Exercise](#Exercise)
    - [Goal](#Goal)
+   - [Logs](#Logs)
 - [Support](#support)
 - [Credits](#credits)
 
@@ -134,10 +135,70 @@ Returns: object
 Function: Returns a successful message
 ```
 
+## Logs
+
+```
+POST -- /logs
+Returns: object
+Function: Adds a log to the database, returns that log
+Data Structure:
+    lid: "" - required
+    uid: "" - required
+    eid: "" - required
+    duration: "" - optional
+    repetitions: "" - optional
+    distance: "" - optional
+    heart_rate: "" - optional
+    weight: "" - optional
+    calories: "" - optional
+    notes: "" - optional
+    dateTime: "" - optional
+
+GET -- /logs
+Returns: array of objects
+Function: Returns all logs for all users
+
+GET -- /logs/[log id]
+Returns: object
+Function: Returns a single log
+
+PUT -- /logs/[log id]
+Returns: object
+Function: Returns an updated log
+
+DELETE -- /logs/[log id]
+Returns: object
+Function: Returns an uplifting message
+
+GET -- /users/[username]/logs
+Returns: array of objects
+Function: Returns all logs for a single user
+
+GET -- /users/[username]/logs/[exercise name or id]
+Returns: array of objects
+Function: Returns all logs for a single user & a single exercise
+
+GET -- /exercises[exercise name or id]/logs
+Returns: array of objects
+Function: Returns all logs for a single exercise
+
+DELETE -- /logs
+Returns: object
+Function: Removes all logs
+
+DELETE -- /users/logs/[username]
+Returns: object
+Function: Removes all logs for a single user
+
+DELETE -- /users/logs/[username]/[exercise name or id]
+Returns: object
+Function: Removes all logs for a single exerciese & a single user
+```
+
 # Support
 
 Please contact Dustin or Mychal via Slack, fax, or payphone for support with any issues. We also
-accept messages by carrier pidgeon.
+accept messages by carrier pigeon.
 
 
 # Credits
