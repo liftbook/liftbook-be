@@ -52,30 +52,6 @@ router.get('/:log', async (req, res) => {
         res.status(500).json(err)
     }
 })
-//MOVE TO USERS
-router.get('/:username/logs', async (req, res) => {
-    try {
-        const logs = await modelLog.get_user_logs(req.params.username)
-        logs.length > 0
-        ?   res.status(200).json(logs)
-        :   res.status(404).json({message: `Couldn't find logs for ${req.params.username}`})
-    } catch (err) {
-        console.log('get user logs err:', err)
-        res.status(500).json(err)
-    }
-})
-//MOVE TO USERS
-router.get('/:username/logs/:exercise', async (req, res) => {
-    try {
-        const logs = await modelLog.get_user_logs_by_exercise(req.params.username, req.params.exercise)
-        logs.length > 0
-        ?   res.status(200).json(logs)
-        :   res.status(404).json({message: `Couldn't find a log for exercise ${req.params.exercise} for user ${req.params.username}.`})
-    } catch (err) {
-        console.log('get user logs for exercise err:', err)
-        res.status(500).json(err)
-    }
-})
 
 //update
 router.put('/:log', mwLog.get, mwLog.update, async (req, res) => {
