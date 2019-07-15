@@ -71,7 +71,6 @@ Data Structure:
     description: "" - required
     icon_src: "" - optional
 
-
 GET -- /exercises
 Returns: array of objects
 Function: Returns all exercises
@@ -89,6 +88,48 @@ Returns: object
 Function: Returns a successful message
 ```
 
+## Goal Endpoints
+
+```
+POST -- /goals
+Returns: object
+Function: Adds a goal to the database, returns that goal
+Data Structure:
+    gid: "" - required
+    uid: "" - required
+    eid: "" - required
+    duration: "" - optional
+    repetitions: "" - optional
+    distance: "" - optional
+    heart_rate: "" - optional
+    weight: "" - optional
+    calories: "" - optional
+    dateTime: "" - optional
+
+GET -- /goals
+Returns: array of objects
+Function: Returns all goals
+
+GET -- /goals/[goal id]
+Returns: object
+Function: Returns a single goal
+
+GET -- /users/[username]/goals
+Returns: array of objects
+Function: Returns all goals for one user
+
+GET -- /users/[username]/goals/[exercise name or id]
+Returns: array of objects
+Function: Returns all goals for one exercise
+
+PUT -- /goals/[goal id]
+Returns: object
+Function: Returns an updated goal
+
+DELETE -- /goals/[goal id]
+Returns: object
+Function: Returns a successful message
+```
 
 # Support
 
