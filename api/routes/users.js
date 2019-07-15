@@ -1,4 +1,4 @@
-//ENDPOINT: /api/users
+//ENDPOINT: /api/users 
 
 //IMPORTS
 const express = require('express')
@@ -12,6 +12,7 @@ const router = express.Router()
 //models
 const modelUsers = require('../models/users')
 const modelLog = require('../models/logs')
+const modelGoal = require('../models/goals')
 
 //ROUTES
 //create
@@ -82,31 +83,25 @@ router.get('/:username/logs/:exercise', async (req, res) => {
         res.status(500).json(err)
     }
 })
-/*
-    NEEDS MIDDLEWARE
-*/
-router.get('/:username/logs', mwUsers.check_user, async (req, res) => {
+router.get('/:username/goals', async (req, res) => {
     try {
-        const logs = await modelLogs.get_all_user_logs(req.body.uid)
-        logs.length > 0
-        ?   res.status(200).json(logs)
-        :   res.status(404).json({message: `Couldn't find any logs for user ${req.params.uid}.`})
+        const goals = await modelGoal.get_user_goals(req.params.username)
+        goals.length > 0
+        ?   res.status(200).json(goals)
+        :   res.status(404).json({message: `Couldn't find goals for ${req.params.username}`})
     } catch (err) {
-        console.log('get all user logs for exercise err:', err)
+        console.log('get user goals err:', err)
         res.status(500).json(err)
     }
 })
-/*
-    NEEDS MIDDLEWARE
-*/
-router.get('/:username/logs/:exercise', mwUsers.check_user, mwExercises.get, async (req, res) => {
+router.get('/:username/goals/:exercise', async (req, res) => {
     try {
-        const logs = await modelLogs.get_all_user_logs_for_exercise(req.body.uid, req.body.eid)
-        logs.length > 0
-        ?   res.status(200).json(logs)
-        :   res.status(404).json({message: `Couldn't find any logs for exercise ${req.params.exercise} by user ${req.params.username}.`})
+        const goals = await modelGoal.get_user_goals_by_exercise(req.params.username, req.params.exercise)
+        goals.length > 0
+        ?   res.status(200).json(goals)
+        :   res.status(404).json({message: `Couldn't find a goal for exercise ${req.params.exercise} for user ${req.params.username}.`})
     } catch (err) {
-        console.log('get all user logs for exercise err:', err)
+        console.log('get user goals for exercise err:', err)
         res.status(500).json(err)
     }
 })

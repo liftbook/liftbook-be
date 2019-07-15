@@ -2,6 +2,7 @@ const modelExercises = require('../models/exercises')
 const modelUsers = require('../models/users')
 const modelRecords = require('../models/records')
 const modelLogs = require('../models/logs')
+const modelGoals = require('../models/goals')
 
 //user is a username
 user_by_username = async (username) => {
@@ -33,11 +34,18 @@ log = async (log_id) => {
     if(log) return log
     else return false
 }
+//goal_id is an id
+goal = async (goal_id) => {
+    const goal = await modelGoals.get_by({gid: goal_id})
+    if(goal) return goal
+    else return false
+}
 
 module.exports = {
     user_by_username,
     user_by_email,
     record,
     exercise,
-    log
+    log,
+    goal
 }
