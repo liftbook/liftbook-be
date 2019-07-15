@@ -9,6 +9,9 @@ and add more functionality to the API.
 ## Table of Contents
 
 - [Endpoints](#Endpoints)
+- - [User](##UserEndpoints)
+- - [Exercise](##ExerciseEndpoints)
+- - [Goal](##GoalEndpoints)
 - [Support](#support)
 - [Credits](#credits)
 
