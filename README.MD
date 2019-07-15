@@ -23,7 +23,7 @@ URL before the endpoint route.
 The following endpoints are available for use in your React app. Go crazy!
 
 
-## User Endpoints
+## User
 
 ```
 POST -- /users/register 
@@ -62,7 +62,7 @@ Function: Returns {message: 'user [username] has been removed'}
 ```
 
 
-## Exercise Endpoints
+## Exercise
 
 ```
 POST -- /exercises 
@@ -91,7 +91,7 @@ Returns: object
 Function: Returns a successful message
 ```
 
-## Goal Endpoints
+## Goal
 
 ```
 POST -- /goals
