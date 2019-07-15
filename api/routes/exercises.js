@@ -61,8 +61,8 @@ router.put('/:exercise', mwExercise.check_unqiue, mwExercise.get, mwExercise.upd
 router.delete('/:exercise', mwExercise.get, mwExercise.update, async (req, res) => {
     try {
         await modelExercises.remove_exercise(req.body.eid)
-        ?   res.status(200).json({message: `Exercise ${req.params.eid} has been removed.`})
-        :   res.status(404).json({message: `Exercise ${req.params.eid} couldn't be found.`})
+        ?   res.status(200).json({message: `Exercise ${req.body.name} has been removed.`})
+        :   res.status(404).json({message: `Exercise ${req.params.exercise} couldn't be found.`})
     } catch (err) {
         console.log('remove exercise err:', err)
         res.status(500).json(err)

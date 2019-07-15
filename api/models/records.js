@@ -22,16 +22,29 @@ const get_record_by = async value =>
     .where(value)
     .first();
 
-// update
+const get_user_records = async (username) => 
+  await db.select('records.*')
+    .from('records')
+    .join('users', {'users.uid': 'records.uid'})
+    .where({'users.username': username})
 
-const update_record = async (id, record) => {
+const get_user_records_by_exercise = async (username, exercise) =>
+  await db.select('records.*')
+    .from('records')
+    .join('users', {'users.uid': 'records.uid'})
+    .where({username: username})
+    .join('exercises', {'exercises.eid': 'records.eid'})
+    .where({'exercises.name': exercise})
+    .orWhere({'exercises.eid': exercise})
+
+// update
+const update_record = async (record) => {
   return await db("records")
-    .where({ rid: id })
+    .where({ rid: record.rid })
     .update(record);
-};
+}
 
 // delete
-
 const remove_record = async rid =>
   await db("records")
     .where({ rid: rid })
@@ -42,6 +55,8 @@ const remove_record = async rid =>
 module.exports = {
   add_record,
   get_all_records,
+  get_user_records,
+  get_user_records_by_exercise,
   get_record_by,
   update_record,
   remove_record
