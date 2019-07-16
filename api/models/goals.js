@@ -38,7 +38,7 @@ const update = async (goal) => {
     await db('goals')
         .where({gid: goal.gid})
         .update(goal)
-    return await db('goals').where({gid: goal.gid})
+    return await db('goals').where({gid: goal.gid}).first()
 }
 
 //delete
