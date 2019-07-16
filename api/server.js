@@ -2,12 +2,14 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const multer = require("multer")
 //routes
 const routesLogs = require('./routes/logs')
 const routesUsers = require("./routes/users");
 const routesExercises = require("./routes/exercises");
 const routesRecords = require("./routes/records");
 const routesGoals = require('./routes/goals')
+const routesPhoto = require('./routes/photo.js')
 
 
 //SETUP
@@ -25,6 +27,7 @@ server.use("/api/users", routesUsers);
 server.use("/api/exercises", routesExercises);
 server.use("/api/records", routesRecords);
 server.use('/api/goals', routesGoals)
+server.use('/api/photos', routesPhoto)
 
 // API is online Notification
 server.get("/", (req, res) => {
