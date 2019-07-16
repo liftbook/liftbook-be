@@ -13,6 +13,7 @@ and add more functionality to the API.
    - [Exercise](#Exercise)
    - [Goal](#Goal)
    - [Logs](#Logs)
+   - [Records](#Records)
 - [Support](#support)
 - [Credits](#credits)
 
@@ -193,6 +194,41 @@ Function: Removes all logs for a single user
 DELETE -- /users/logs/[username]/[exercise name or id]
 Returns: object
 Function: Removes all logs for a single exerciese & a single user
+```
+
+## Records
+
+```
+POST -- /records
+Returns: object
+Function: Adds a record to the database, returns that record
+Data Structure:
+    rid: "" - required
+    uid: "" - required
+    eid: "" - required
+    duration: "" - optional
+    repetitions: "" - optional
+    distance: "" - optional
+    heart_rate: "" - optional
+    weight: "" - optional
+    calories: "" - optional
+    dateTime: "" - optional
+
+GET -- /records/[user id]
+Returns: array of objects
+Function: Returns all records for a single user
+
+GET -- /records/[user id]/[exercise id]
+Returns: object
+Function: Returns a single record for a single exercise & user
+
+PUT -- /records/[user id]/[exercise id]
+Returns: object
+Function: Returns an updated record
+
+DELETE -- /records/[user id]/[exercise id]
+Returns: object
+Function: Returns a success message
 ```
 
 # Support
