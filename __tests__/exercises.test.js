@@ -5,3 +5,24 @@
 //|    ___| |     | |    ___||    __  ||      _||   | |_____  ||    ___|    |   |  |    ___||_____  |  |   |  |_____  |
 //|   |___ |   _   ||   |___ |   |  | ||     |_ |   |  _____| ||   |___     |   |  |   |___  _____| |  |   |   _____| |
 //|_______||__| |__||_______||___|  |_||_______||___| |_______||_______|    |___|  |_______||_______|  |___|  |_______|
+
+//IMPORTS
+const request = require('supertest')
+//local
+const server = require('../api/server')
+const db = require('./dbConfig')
+const modelExercise = require('../api/models/exercises')
+
+//TESTS
+describe('exercises', () => {
+    describe('model', () => {
+        describe('add', () => {
+            
+        })
+    })
+    describe('routes', () => {
+        describe('add', () => {
+            
+        })
+    })
+})
