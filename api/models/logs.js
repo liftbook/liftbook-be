@@ -37,7 +37,7 @@ const update = async (log) => {
     await db('logs')
         .where({lid: log.lid})
         .update(log)
-    return await db('logs').where({lid: log.lid})
+    return await db('logs').where({lid: log.lid}).first()
 }
 //delete
 const remove_by = async (value) =>
