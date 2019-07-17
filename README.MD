@@ -73,7 +73,10 @@ Function: Adds an exercise to the database, returns that exercise
 Data Structure:
     name: "" - required
     username: "" - required
-    description: "" - required
+    weight_lifted: "" - required
+    repeititions: "" - required
+    body_part: "" - required
+    date: "" - optional
     icon_src: "" - optional
 
 GET -- /exercises
