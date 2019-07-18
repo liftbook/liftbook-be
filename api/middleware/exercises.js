@@ -9,16 +9,18 @@ const check = require('../helpers/check')
 //prepares the reqbody for insertion into the db
 //removes all unnessary fields for protection
 prepare_new = async (req, res, next) => {
-    const user = await retrieve.user_by_username(req.body.username)
+    const user = await retrieve.user_by_username(req.body.user)
     if(!user)
-        return res.status(404).json({message: `Username ${req.body.username} couldn't be found.`})
+        return res.status(404).json({message: `Username ${req.body.user} couldn't be found.`})
 
     req.body = {
         eid: uuid.v4(),
+        weight_lifted: req.body.weight_lifted,
+        repetitions: req.body.repetitions,
+        body_part: req.body.body_part,
         created_by: user.uid,
         updated_by: user.uid,
         name: req.body.name,
-        description: req.body.description,
         icon_src: req.body.icon_src
     }
     next()
@@ -55,7 +57,7 @@ update = async (req, res, next) => {
 }
 
 check_required = async (req, res, next) => {
-    const required_fields = ['name', 'username', 'description']
+    const required_fields = ['name', 'username']
     const requirements_met = await check.required(req.body, required_fields)
     if(requirements_met) return res.status(612).json({message: `Required fields are ${required_fields}.`})
     next()
