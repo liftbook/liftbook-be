@@ -31,7 +31,7 @@ router.post('/login', mwAuth.authenticate, mwAuth.username_exists, mwAuth.passwo
     try {
         const user = await modelUsers.get_user_by({username: req.body.username})
         user
-        ?   res.status(201).json({message: `login successful`, token: req.authorization})
+        ?   res.status(201).json({message: `login successful`, token: req.authorization, username: req.body.username})
         :   res.status(404).json({message: `Wong!`})
     } catch (err) {
         console.log('user login err:',err)
