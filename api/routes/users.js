@@ -4,8 +4,6 @@
 const express = require("express");
 //local
 const mwAuth = require("../middleware/auth");
-const mwUsers = require("../middleware/users");
-const mwExercises = require("../middleware/exercises");
 const { token_check } = require("../helpers/token_check");
 
 //SETUP
@@ -54,6 +52,7 @@ router.post(
 //read
 router.get("/", token_check ,async (req, res) => {
   try {
+    console.log("made it here, bitch")
     const users = await modelUsers.get_all_users();
     users.length > 0
       ? res.status(200).json(users)
