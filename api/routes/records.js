@@ -5,6 +5,7 @@ const express = require("express");
 
 // local
 const mwRecord = require("../middleware/records");
+const { token_check } = require("../helpers/token_check");
 
 // SETUP
 const router = express.Router();
@@ -15,7 +16,7 @@ const modelRecords = require("../models/records");
 // ROUTES
 
 // create
-router.post("/", mwRecord.check_required, mwRecord.prepare_new, async (req, res) => {
+router.post("/", mwRecord.check_required, mwRecord.prepare_new, token_check, async (req, res) => {
   try {
     const record = await modelRecords.add_record(req.body);
     record
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
     res.status(500).json(err);
   }
 })
-router.get("/:username", async (req, res) => {
+router.get("/:username", token_check, async (req, res) => {
   try {
     const records = await modelRecords.get_user_records(req.params.username)
     records.length > 0
@@ -50,7 +51,7 @@ router.get("/:username", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:username/:exercise", async (req, res) => {
+router.get("/:username/:exercise", token_check, async (req, res) => {
   try {
     const record = await modelRecords.get_user_records_by_exercise(req.params.username, req.params.exercise);
     record
@@ -63,7 +64,7 @@ router.get("/:username/:exercise", async (req, res) => {
 });
 
 // update
-router.put("/:record", mwRecord.get, mwRecord.update, async (req, res) => {
+router.put("/:record", mwRecord.get, mwRecord.update, token_check, async (req, res) => {
   try {
     const record = await modelRecords.update_record(req.body);
     record

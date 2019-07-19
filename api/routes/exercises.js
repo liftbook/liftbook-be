@@ -4,6 +4,7 @@
 const express = require('express')
 //local
 const mwExercise = require('../middleware/exercises')
+const { token_check } = require("../helpers/token_check");
 
 //SETUP
 const router = express.Router()
@@ -12,7 +13,7 @@ const modelExercises = require('../models/exercises')
 
 //ROUTES
 //create
-router.post('/', mwExercise.check_required, mwExercise.check_unqiue, mwExercise.prepare_new, async (req, res) => {
+router.post('/', token_check, mwExercise.check_required, mwExercise.check_unqiue, mwExercise.prepare_new, async (req, res) => {
     try {
         const exercise = await modelExercises.add_exercise(req.body)
         exercise
@@ -24,7 +25,7 @@ router.post('/', mwExercise.check_required, mwExercise.check_unqiue, mwExercise.
     }
 })
 //read
-router.get('/', async (req, res) => {
+router.get('/', token_check, async (req, res) => {
     try {
         const exercises = await modelExercises.get_all_exercises()
         exercises.length > 0
@@ -35,7 +36,7 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:exercise', async (req, res) => {
+router.get('/:exercise', token_check, async (req, res) => {
     try {
         const exercise = await modelExercises.get_by_id_or_name(req.params.exercise)
         exercise
@@ -47,7 +48,7 @@ router.get('/:exercise', async (req, res) => {
     }
 })
 //update
-router.put('/:exercise', mwExercise.check_unqiue, mwExercise.get, mwExercise.update, async (req, res) => {
+router.put('/:exercise', token_check, mwExercise.check_unqiue, mwExercise.get, mwExercise.update, async (req, res) => {
     try {
         await modelExercises.update_exercise(req.body)
         ?   res.status(200).json(req.body)
@@ -58,7 +59,7 @@ router.put('/:exercise', mwExercise.check_unqiue, mwExercise.get, mwExercise.upd
     }
 })
 // delete
-router.delete('/:exercise', mwExercise.get, mwExercise.update, async (req, res) => {
+router.delete('/:exercise', token_check, mwExercise.get, mwExercise.update, async (req, res) => {
     try {
         await modelExercises.remove_exercise(req.body.eid)
         ?   res.status(200).json({message: `Exercise ${req.body.name} has been removed.`})

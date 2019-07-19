@@ -32,11 +32,12 @@ username_exists = async (req, res, next) => {
     next()
 }
 password_matches = async (req, res, next) => {
-    if(crypt.compareSync(req.body.password, req.body.user.password))
+    if(crypt.compareSync(req.body.password, req.body.user.password)) {
         req.authorization = jwtGenToken(req.body.user)
-    else
+    }
+    else {
         return res.status(403).json({message: `Incorrect password dumbass.`})
-
+    }
     next()
 }
 
