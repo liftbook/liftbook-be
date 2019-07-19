@@ -4,6 +4,7 @@ const express = require('express')
 //local
 const modelGoal = require('../models/goals')
 const mwGoal = require('../middleware/goals.js')
+const { token_check } = require("../helpers/token_check");
 
 //SETUP
 const router = express.Router()
@@ -17,7 +18,7 @@ const router = express.Router()
 //|_______||_______||__| |__||_______|  |___|  |_||_______||_______|  |___|  |_______||_______|
 
 //create
-router.post('/', mwGoal.check_required, mwGoal.prepare_new, async (req, res) => {
+router.post('/', token_check, mwGoal.check_required, mwGoal.prepare_new, async (req, res) => {
     try {
         const goal = await modelGoal.add(req.body)
         goal
@@ -30,7 +31,7 @@ router.post('/', mwGoal.check_required, mwGoal.prepare_new, async (req, res) => 
 })
 
 //read
-router.get('/', async (req, res) => {
+router.get('/', token_check, async (req, res) => {
     try {
         const goals = await modelGoal.get_all()
         goals.length > 0
@@ -41,7 +42,7 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:goal', async (req, res) => {
+router.get('/:goal', token_check, async (req, res) => {
     try {
         const goal = await modelGoal.get_by({gid: req.params.goal})
         goal
@@ -54,7 +55,7 @@ router.get('/:goal', async (req, res) => {
 })
 
 //update
-router.put('/:goal', mwGoal.get, mwGoal.update, async (req, res) => {
+router.put('/:goal', token_check, mwGoal.get, mwGoal.update, async (req, res) => {
     try {
         const goal = await modelGoal.update(req.body)
         goal
@@ -67,7 +68,7 @@ router.put('/:goal', mwGoal.get, mwGoal.update, async (req, res) => {
 })
 
 //delete
-router.delete('/:goal', async (req, res) => {
+router.delete('/:goal', token_check, async (req, res) => {
     try {
         await modelGoal.remove_by({gid: req.params.goal})
         ?   res.status(200).json({message: `Goal ${req.params.goal} has been removed.`})

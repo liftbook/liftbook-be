@@ -56,7 +56,7 @@ router.get("/", token_check ,async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:username", async (req, res) => {
+router.get("/:username", token_check, async (req, res) => {
   try {
     const user = await modelUsers.get_user_by({
       username: req.params.username
@@ -71,7 +71,7 @@ router.get("/:username", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:username/logs", async (req, res) => {
+router.get("/:username/logs",  token_check, async (req, res) => {
   try {
     const logs = await modelLog.get_user_logs(req.params.username);
     logs.length > 0
@@ -84,7 +84,7 @@ router.get("/:username/logs", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:username/logs/:exercise", async (req, res) => {
+router.get("/:username/logs/:exercise", token_check, async (req, res) => {
   try {
     const logs = await modelLog.get_user_logs_by_exercise(
       req.params.username,
@@ -102,7 +102,7 @@ router.get("/:username/logs/:exercise", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:username/goals", async (req, res) => {
+router.get("/:username/goals", token_check, async (req, res) => {
   try {
     const goals = await modelGoal.get_user_goals(req.params.username);
     goals.length > 0
@@ -115,7 +115,7 @@ router.get("/:username/goals", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.get("/:username/goals/:exercise", async (req, res) => {
+router.get("/:username/goals/:exercise", token_check, async (req, res) => {
   try {
     const goals = await modelGoal.get_user_goals_by_exercise(
       req.params.username,

@@ -4,6 +4,7 @@ const express = require('express')
 //local
 const modelLog = require('../models/logs')
 const mwLog = require('../middleware/logs')
+const { token_check } = require("../helpers/token_check");
 
 //SETUP
 const router = express.Router()
@@ -17,7 +18,7 @@ const router = express.Router()
 //|_______||_______||_______|  |___|  |_||_______||_______|  |___|  |_______||_______|
 
 //create
-router.post('/', mwLog.check_required, mwLog.prepare_new, async (req, res) => {
+router.post('/', mwLog.check_required, mwLog.prepare_new, token_check, async (req, res) => {
     try {
         const log = await modelLog.add(req.body)
         log
@@ -30,7 +31,7 @@ router.post('/', mwLog.check_required, mwLog.prepare_new, async (req, res) => {
 })
 
 //read
-router.get('/', async (req, res) => {
+router.get('/', token_check, async (req, res) => {
     try {
         const logs = await modelLog.get_all()
         logs.length > 0
@@ -41,7 +42,7 @@ router.get('/', async (req, res) => {
         res.status(500).json(err)
     }
 })
-router.get('/:log', async (req, res) => {
+router.get('/:log', token_check, async (req, res) => {
     try {
         const log = await modelLog.get_by({lid: req.params.log})
         log
@@ -54,7 +55,7 @@ router.get('/:log', async (req, res) => {
 })
 
 //update
-router.put('/:log', mwLog.get, mwLog.update, async (req, res) => {
+router.put('/:log', mwLog.get, mwLog.update, token_check, async (req, res) => {
     try {
         const log = await modelLog.update(req.body)
         log
@@ -67,7 +68,7 @@ router.put('/:log', mwLog.get, mwLog.update, async (req, res) => {
 })
 
 //delete
-router.delete('/:log', async (req, res) => {
+router.delete('/:log', token_check, async (req, res) => {
     try {
         await modelLog.remove_by({lid: req.params.log})
         ?   res.status(200).json({message: `Log ${req.params.log} has been removed.`})
