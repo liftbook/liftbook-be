@@ -40,10 +40,12 @@ const update = async (log) => {
     return await db('logs').where({lid: log.lid}).first()
 }
 //delete
-const remove_by = async (value) =>
+const remove_by = async (value) => {
     await db('logs')
         .where(value)
         .delete()
+    return await get_user_logs()
+}
 
 //EXPORT
 module.exports = {

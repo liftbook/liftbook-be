@@ -26,8 +26,10 @@ const update_exercise = async (exercise) => {
 }
     
 //delete
-const remove_exercise = async eid =>
+const remove_exercise = async eid => {
     await db('exercises').where({eid: eid}).delete()
+    return await get_all_exercises()
+}
 
 //EXPORT
 module.exports = {
