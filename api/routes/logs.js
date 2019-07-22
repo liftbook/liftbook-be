@@ -69,9 +69,10 @@ router.put('/:log', mwLog.get, mwLog.update, async (req, res) => {
 //delete
 router.delete('/:log', async (req, res) => {
     try {
-        await modelLog.remove_by({lid: req.params.log})
-        ?   res.status(200).json({message: `Log ${req.params.log} has been removed.`})
-        :   res.status(404).json({message: `Log ${req.params.log} couldn't be found.`})
+        const logs = await modelLog.remove_by({lid: req.params.log})
+        log.length > 0
+        ?   res.status(200).json(logs)
+        :   res.status(404).json(logs)
     } catch (err) {
         console.log('remove log by id err:', err)
         res.status(500).json(err)
